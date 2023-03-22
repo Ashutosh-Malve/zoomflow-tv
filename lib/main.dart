@@ -1,14 +1,56 @@
-import 'dart:async';
-import 'dart:io';
+import 'package:connection_notifier/connection_notifier.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isAndroid) {
-    await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+void main() async {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    /// Wrap [MaterialApp] with [ConnectionNotifier], and that is it!
+    return const ConnectionNotifier(
+      alignment: AlignmentDirectional.bottomCenter,
+      child: MaterialApp(
+        home: MyHomePage(),
+      ),
+    );
   }
-  runApp(const MaterialApp(home: GoogleSlidesApp()));
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      /// If you want to toggle some widgets based on connection state
+      body: ConnectionNotifierToggler(
+        onConnectionStatusChanged: (connected) {
+          /// that means it is still in the initialization phase.
+          if (connected == null) return;
+        },
+        connected: Center(key: UniqueKey(), child: const GoogleSlidesApp()),
+        disconnected: Center(
+          key: UniqueKey(),
+          child: TextButton(
+            onPressed: () {},
+            child: const Text(
+              'Internet Disconnected',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 48,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class GoogleSlidesApp extends StatefulWidget {
