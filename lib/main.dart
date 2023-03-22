@@ -24,7 +24,7 @@ class _GoogleSlidesAppState extends State<GoogleSlidesApp> {
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+    timer = Timer.periodic(const Duration(minutes: 60), (timer) {
       webView.reload();
     });
   }
