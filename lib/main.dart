@@ -28,28 +28,19 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /// If you want to toggle some widgets based on connection state
-      body: ConnectionNotifierToggler(
-        onConnectionStatusChanged: (connected) {
-          /// that means it is still in the initialization phase.
-          if (connected == null) return;
-        },
-        connected: Center(key: UniqueKey(), child: const GoogleSlidesApp()),
-        disconnected: Center(
-          key: UniqueKey(),
-          child: TextButton(
-            onPressed: () {},
-            child: const Text(
-              'Internet Disconnected',
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 48,
-              ),
-            ),
-          ),
-        ),
+
+        /// If you want to toggle some widgets based on connection state
+        body: ConnectionNotifierToggler(
+      onConnectionStatusChanged: (connected) {
+        /// that means it is still in the initialization phase.
+        if (connected == null) return;
+      },
+      connected: Center(key: UniqueKey(), child: const GoogleSlidesApp()),
+      disconnected: Center(
+        key: UniqueKey(),
+        child: TextButton(onPressed: () {}, child: const NoWifi()),
       ),
-    );
+    ));
   }
 }
 
@@ -86,6 +77,34 @@ class _GoogleSlidesAppState extends State<GoogleSlidesApp> {
       onWebViewCreated: (controller) {
         webView = controller;
       },
+    );
+  }
+}
+
+class NoWifi extends StatelessWidget {
+  const NoWifi({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Flex(
+      direction: Axis.vertical,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const <Widget>[
+        Padding(
+          padding: EdgeInsets.all(25.0),
+          child: Text(
+              style: TextStyle(color: Colors.red),
+              'No Internet : ERR_INTERNET_DISCONNECTED '),
+        ),
+        CircularProgressIndicator(
+          color: Colors.black,
+        ),
+        Padding(
+          padding: EdgeInsets.all(25.0),
+          child: Text(
+              style: TextStyle(color: Colors.black), 'Waiting for network'),
+        ),
+      ],
     );
   }
 }
